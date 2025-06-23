@@ -1,0 +1,75 @@
+<%- layout("layout/boilerplate") %>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold text-primary display-6">Create New Listing</h2>
+                        <p class="text-muted">Fill in the details to create your new listing</p>
+                    </div>
+                    <form action="/listings" method="POST"  class="needs-validation" novalidate enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="title" class="form-label fw-semibold">Title</label>
+                            <input type="text" class="form-control form-control-lg shadow-sm" id="title" name="title" placeholder="Enter listing title" required>
+                            <div class="invalid-feedback">Please provide a title.</div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-semibold">Description</label>
+                            <textarea class="form-control shadow-sm" id="description" name="description" rows="4" placeholder="Describe your listing..." required></textarea>
+                            <div class="invalid-feedback">Please provide a description.</div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="image" class="form-label fw-semibold">Image</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-image"></i>
+                                </span>
+                                <input type="file" class="form-control" id="image" name="image" placeholder="https://example.com/image.jpg">
+                                <div class="invalid-feedback">Please provide a valid image URL.</div>   
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="price" class="form-label fw-semibold">Price</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light">$</span>
+                                    <input type="number" class="form-control" id="price" name="price" min="0" placeholder="0.00" required>
+                                    <div class="invalid-feedback">Please provide a valid price.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="country" class="form-label fw-semibold">Country</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-light">
+                                        <i class="bi bi-globe"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" required>
+                                    <div class="invalid-feedback">Please provide a country.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="location" class="form-label fw-semibold">Location</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-geo-alt"></i>
+                                </span>
+                                <input type="text" class="form-control" id="location" name="location" placeholder="Enter location" required>
+                                <div class="invalid-feedback">Please provide a location.</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button type="submit" class="btn btn-gradient-blue custom-btn btn-sm">
+                                <i class="fa-solid fa-pen-to-square me-1"></i>Create Listing
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

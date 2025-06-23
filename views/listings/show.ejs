@@ -1,0 +1,164 @@
+<%- layout("layout/boilerplate") %>
+<div class="container py-5" >
+    <div class="row justify-content-center align-items-center">
+        <div class="col-lg-6 col-md-12 mb-4">
+            <div class="h-100">
+                <img src="<%= listing.image.url %>" class="card-img-top show-img img-hover" alt="listing_image">
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 mb-4">
+            <div class="card shadow-lg border-0 h-100">
+                <div class="card-body d-flex flex-column justify-content-between h-100">
+                    <div>
+                        <h1 class="card-title display-5 fw-bold mb-3"><%= listing.title %></h1>
+                        <h3 class="text-success fw-bold mb-3">$ <%= listing.price.toLocaleString("en-US") %></h3>
+                        <p class="card-text text-muted fs-5 mb-4"><%= listing.description %></p>
+                        <span class="badge bg-primary fs-6 mb-4"><i class="fa-solid fa-location-dot me-2"></i><%= listing.location %>, <%= listing.country %></span>
+                        <p class="card-text text-muted fs-5 mb-4">Owner: <%= listing.owner.username %></p>
+                    </div>
+                    <div class="btns mt-4">
+                        <a href="/listings" class="btn btn-gradient me-2 custom-btn"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+                        <% if(currentUser && currentUser._id.equals(listing.owner._id)) { %>
+                        <a href="/listings/<%= listing._id %>/edit" class="btn btn-gradient-blue me-2 custom-btn"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</a>
+                        <form class="d-inline" action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-gradient-red custom-btn"><i class="fa-solid fa-trash me-1"></i>Delete</button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rating Section -->
+    <% if(currentUser) { %>
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                   
+                    <h3 class="card-title mb-4">Leave a Rating</h3>
+                    <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Rating</label>
+                            <div class="rating">
+                                <input type="radio" name="rating" value="5" id="5" required><label for="5">☆</label>
+                                <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                                <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                                <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                                <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                            </div>
+                            <div class="invalid-feedback">Please select a rating.</div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="comment" class="form-label fw-semibold">Comment</label>
+                            <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="Share your experience..." required></textarea>
+                            <div class="invalid-feedback">Please provide a comment.</div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-gradient-blue custom-btn">
+                                <i class="fa-solid fa-star me-1"></i>Submit Rating
+                            </button>
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- Reviews Display Section -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">
+                        <i class="fa-solid fa-star text-warning me-2"></i>
+                        Reviews
+                        <span class="badge bg-primary ms-2"><%= listing.reviews.length %> reviews</span>
+                    </h3>
+                    
+                    <% if(listing.reviews.length > 0) { %>
+                        <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <% 
+                                    const reviewsPerSlide = 3;
+                                    const totalSlides = Math.ceil(listing.reviews.length / reviewsPerSlide);
+                                    for(let i = 0; i < totalSlides; i++) { 
+                                %>
+                                    <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                                        <div class="reviews-container">
+                                            <% 
+                                                const startIdx = i * reviewsPerSlide;
+                                                const endIdx = Math.min(startIdx + reviewsPerSlide, listing.reviews.length);
+                                                for(let j = startIdx; j < endIdx; j++) { 
+                                                    const review = listing.reviews[j];
+                                            %>
+                                                <div class="review-item mb-4 pb-4 <%= j < endIdx - 1 ? 'border-bottom' : '' %>">
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <div class="stars me-2">
+                                                            <% for(let k = 0; k < 5; k++) { %>
+                                                                <i class="fa-solid fa-star <%= k < review.rating ? 'text-warning' : 'text-muted' %>"></i>
+                                                            <% } %>
+                                                        </div>
+                                                        <small class="text-muted">
+                                                            <%= new Date(review.createdAt).toLocaleDateString() %>
+                                                        </small>
+                                                        <% if(currentUser && currentUser._id.equals(review.author._id)) { %>
+                                                        <form class="ms-auto" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                        <% } %>
+                                                    </div>
+                                                    <div class="review-content">
+                                                        <p class="review-text mb-0"><%= review.comment %></p>
+                                                    </div>
+                                                    <div class="review-author d-flex align-items-center mt-2">
+                                                        <i class="fa-solid fa-user-circle text-success me-1"></i>
+                                                        <span class="fw-semibold"><%= review.author.username %></span>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                            
+                            <% if(totalSlides > 1) { %>
+                                <div class="carousel-controls mt-4 d-flex justify-content-center align-items-center">
+                                    <button class="btn btn-outline-primary me-2" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
+                                        <i class="fa-solid fa-chevron-left"></i>
+                                    </button>
+                                    <div class="carousel-indicators position-static mx-3">
+                                        <% for(let i = 0; i < totalSlides; i++) { %>
+                                            <button type="button" 
+                                                    data-bs-target="#reviewsCarousel" 
+                                                    data-bs-slide-to="<%= i %>" 
+                                                    class="<%= i === 0 ? 'active' : '' %>"
+                                                    aria-current="<%= i === 0 ? 'true' : 'false' %>"
+                                                    aria-label="Slide <%= i + 1 %>">
+                                            </button>
+                                        <% } %>
+                                    </div>
+                                    <button class="btn btn-outline-primary" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="next">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <i class="fa-solid fa-comment-slash text-muted mb-3" style="font-size: 3rem;"></i>
+                            <p class="text-muted mb-0">No reviews yet. Be the first to review this listing!</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

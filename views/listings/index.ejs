@@ -1,0 +1,84 @@
+<%- layout("layout/boilerplate") %>
+
+<div class="listings-bg py-4">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col text-center">
+                <h1 class="display-3 fw-bold listings-header">All Lands</h1>
+                <div class="header-underline mx-auto mt-2"></div>
+            </div>
+        </div>
+        <!-- Search Bar -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-6 col-md-8 col-12">
+                <form class="input-group shadow rounded-4 overflow-hidden" method="GET" action="/listings">
+                    <input type="text" class="form-control form-control-lg border-0 bg-white px-4" name="q" placeholder="Search by title, location, or country..." value="<%= typeof q !== 'undefined' ? q : '' %>" style="background:rgba(255,255,255,0.95);">
+                    <button class="btn btn-gradient-details px-4" type="submit">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </form>
+            </div>
+        </div>
+        <% if (listings.length === 0) { %>
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-6 col-md-8 col-12">
+                    <div class="alert alert-warning text-center shadow rounded-4 py-4" style="background: linear-gradient(90deg, #e0eafc 0%, #cfdef3 100%); border: none;">
+                        <i class="bi bi-emoji-frown fs-1 mb-2 d-block"></i>
+                        <h4 class="fw-bold mb-2">No listings found matching your search.</h4>
+                        <div class="text-muted">Try a different keyword or clear your search to see all listings.</div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+            <% for(let listing of listings) { %>
+                <div class="col d-flex align-items-stretch">
+                    <div class="card mb-4 shadow-sm border-0 rounded-4 position-relative w-100" style="overflow:hidden;">
+                        <div class="position-relative" style="height:250px;overflow:hidden;">
+                            <img src="<%= listing.image.url %>"
+                                 class="card-img-top rounded-top-4"
+                                 alt="listing_image"
+                                 style="height:250px;object-fit:cover;width:100%;"
+                                 onerror="this.onerror=null;this.src='/images/placeholder.jpg';">
+                           
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title mb-1"><%= listing.title %></h5>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="fw-semibold">$<%= listing.price.toLocaleString("en-US") %></span>
+                                
+                            </div>
+                            <div class="text-muted small mb-1">
+                                <i class="bi bi-geo-alt me-1"></i><%= listing.location %>, <%= listing.country %>
+                            </div>
+                            <a href="/listings/<%= listing._id %>" class="btn btn-gradient-details w-100 mt-2">
+                                <i class="fa-solid fa-arrow-right me-2"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('input[name="q"]');
+        const searchForm = searchInput.closest('form');
+        let lastValue = searchInput.value;
+    
+        searchInput.addEventListener('input', function() {
+            if (lastValue && searchInput.value === '') {
+                // If the user cleared the box, auto-submit to show all listings
+                searchForm.submit();
+            }
+            lastValue = searchInput.value;
+        });
+    });
+</script>
+
+
+
+
+

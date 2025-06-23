@@ -1,0 +1,19 @@
+<% if(success.length > 0) { %>
+    <div class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm border-0 mx-auto mt-3" role="alert" style="font-family: 'Arial', sans-serif; font-size:1.1rem; background: linear-gradient(90deg, #d4fc79 0%, #96e6a1 100%); max-width: 400px; min-width: 250px; justify-content: center;">
+        <i class="bi bi-check-circle-fill me-2" style="font-size:1.5rem;"></i>
+        <div class="flex-grow-1 text-center">
+            <%= success %>
+        </div>
+        <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
+
+<% if(error.length > 0) { %>
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm border-0 mx-auto mt-3" role="alert" style="font-family: 'Arial', sans-serif; font-size:1.1rem; background: linear-gradient(90deg, #ff6b6b 0%, #ff8e8e 100%); max-width: 400px; min-width: 250px; justify-content: center;">
+        <i class="bi bi-exclamation-circle-fill me-2" style="font-size:1.5rem;"></i>
+        <div class="flex-grow-1 text-center">
+            <%= error %>
+        </div>
+        <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
